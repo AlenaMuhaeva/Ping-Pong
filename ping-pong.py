@@ -29,18 +29,39 @@ class Player(GameSprite):
             self.rect.y += self.speed
 
 background = transform.scale(image.load('fon.jpg'),(win_width, win_height))
-player1 = Player('player.jpg', 10, 100, 5, 75, 90)
-player2 = Player('player.jpg', 600, 100, 5, 75, 90)
+player1 = Player('player.jpg', 90, 100, 5, 30, 90)
+player2 = Player('player.jpg', 600, 100, 5, 30, 90)
 ball = GameSprite('ball.png', 250, 250, 5,60,60)
 clock = time.Clock()
 FPS = 60
 run = True
+speed_x = 3
+speed_y = 3
+finish = False
+font.init()
+font1 = font.Font(None, 35)
+lose1 = font1.render('PLAYER 1 LOSE!!!', True, (180, 0, 0))
+lose2 = font1.render('PLAYER 2 LOSE!!!', True, (180, 0, 0))
 while run:
     for e in event.get():
         if e.type == QUIT:
             run = False
     window.blit(background, (0,0))
-  
+    if finish != True:
+        ball.rect.x += speed_x
+        ball.rect.y += speed_y 
+    if ball.rect.y > win_height-50 or ball.rect.y < 0:
+        speed_y *= -1
+    if sprite.collide_rect(player1, ball) or sprite.collide_rect(player2, ball):
+        speed_x *= -1
+    if ball.rect.x > win_width - 50:
+        finish = True
+        window.blit(lose2,(255,200))
+    if ball.rect.x < 10:
+        finish =True
+        window.blit(lose1,(255,200))
+    
+    
     player1.update_L()
     player1.reset()
     player2.update_R()
